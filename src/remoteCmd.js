@@ -19,7 +19,7 @@ const remoteCmd = async (content, privateKeyPath, isRequired, label, sshCmdArgs)
     writeToFile({ dir: githubWorkspace, filename, content });
     const dataLimit = 10000;
     const rsyncStdout = (process.env.RSYNC_STDOUT || '').substring(0, dataLimit);
-    console.log(`Executing remote script: ssh -i ${privateKeyPath} ${sshServer}`);
+    console.log(`Executing remote script: ssh -i ${privateKeyPath} ${sshServer} on port ${(remotePort || 22)} with arguments ${sshCmdArgs}`);
     exec(
       `DEBIAN_FRONTEND=noninteractive ssh -p ${(remotePort || 22)} -i ${privateKeyPath} ${sshCmdArgs} ${sshServer} 'RSYNC_STDOUT="${rsyncStdout}" bash -s' < ${filename}`,
       (err, data = '', stderr = '') => {
