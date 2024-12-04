@@ -1,6 +1,6 @@
 const { exec } = require('child_process');
 const crypto = require('crypto');
-const { sshServer, githubWorkspace, remotePort, sshCmdArgs } = require('./inputs');
+const { sshServer, githubWorkspace, remotePort } = require('./inputs');
 const { writeToFile, deleteFile } = require('./helpers');
 
 const handleError = (message, isRequired, callback) => {
@@ -12,7 +12,7 @@ const handleError = (message, isRequired, callback) => {
 };
 
 // eslint-disable-next-line max-len
-const remoteCmd = async (content, privateKeyPath, isRequired, label) => new Promise((resolve, reject) => {
+const remoteCmd = async (content, privateKeyPath, isRequired, label, sshCmdArgs) => new Promise((resolve, reject) => {
   const uuid = crypto.randomUUID();
   const filename = `local_ssh_script-${label}-${uuid}.sh`;
   try {
@@ -42,6 +42,6 @@ const remoteCmd = async (content, privateKeyPath, isRequired, label) => new Prom
 });
 
 module.exports = {
-  remoteCmdBefore: async (cmd, privateKeyPath, isRequired) => remoteCmd(cmd, privateKeyPath, isRequired, 'before'),
-  remoteCmdAfter: async (cmd, privateKeyPath, isRequired) => remoteCmd(cmd, privateKeyPath, isRequired, 'after')
+  remoteCmdBefore: async (cmd, privateKeyPath, isRequired, sshCmdArgs) => remoteCmd(cmd, privateKeyPath, isRequired, 'before', sshCmdArgs),
+  remoteCmdAfter: async (cmd, privateKeyPath, isRequired, sshCmdArgs) => remoteCmd(cmd, privateKeyPath, isRequired, 'after', sshCmdArgs)
 };
